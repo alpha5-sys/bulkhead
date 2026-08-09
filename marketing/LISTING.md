@@ -70,6 +70,8 @@ so it is one keystroke.
 *Try it first:* the [free edition](https://extensions.blender.org) has the plating,
 the seams, the height steps and the chamfers. This one adds the fittings and vents.
 
+*Already running the free edition?* Remove it before installing this one — both register the same operators, so Blender errors if they sit side by side. Your scenes are unaffected.
+
 *Licence:* GPL-3.0-or-later — a Blender add-on links Blender's Python API, so it has
 to be. You are buying the build, the updates and the support.
 

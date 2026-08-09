@@ -52,6 +52,10 @@ look.
 | Fittings — greebles bolted to plates | | ✅ |
 | Vents | | ✅ |
 
+
+> **Already have the free edition installed?** Remove it first. Both register the
+> same operators, so Blender will error if you have them side by side.
+
 The paid edition is not listed yet — it goes up on Gumroad at launch. Watch this repo.
 
 ## How it works

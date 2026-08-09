@@ -26,14 +26,23 @@ SKIP_DIRS = {"__pycache__", ".git"}
 SKIP_SUFFIX = (".pyc", ".pyo", ".orig", ".rej")
 
 EDITIONS = {
+    # The paid edition takes the "_pro" id, not the plain one. The free edition is
+    # what lives on extensions.blender.org, and that platform hosts only free GPL
+    # add-ons -- calling it "Bulkhead Free" there is meaningless at best and reads as
+    # an upsell tease at worst, which reviewers reject.
+    #
+    # The ids differ so the platform's auto-update can never quietly overwrite a
+    # paying customer's build with the free one. The flip side is that both register
+    # the same operator names, so having both installed at once clashes; the paid
+    # listing and README say to remove the free edition first.
     "pro": {
-        "id": "bulkhead",
-        "name": "Bulkhead",
+        "id": "bulkhead_pro",
+        "name": "Bulkhead Pro",
         "tagline": "Hull plating and greebles that look designed, not random",
     },
     "free": {
-        "id": "bulkhead_free",
-        "name": "Bulkhead Free",
+        "id": "bulkhead",
+        "name": "Bulkhead",
         "tagline": "Hierarchical hull plating with aligned seams",
     },
 }

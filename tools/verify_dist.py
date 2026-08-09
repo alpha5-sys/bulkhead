@@ -88,7 +88,9 @@ if not zips:
     sys.exit(1)
 
 for path in zips:
-    exercise(path, expect_pro="_free" not in os.path.basename(path))
+    # The paid build is the one carrying "_pro"; the free build now holds the
+    # plain name, so absence of a marker no longer implies paid.
+    exercise(path, expect_pro="_pro" in os.path.basename(path))
 
 print("\n" + "=" * 50)
 if _failures:

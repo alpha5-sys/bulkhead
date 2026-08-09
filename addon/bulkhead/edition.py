@@ -19,4 +19,4 @@ IS_PRO = TIER == "pro"
 HAS_FEATURES = IS_PRO
 HAS_PRESETS = IS_PRO
 
-LABEL = "Bulkhead" if IS_PRO else "Bulkhead Free"
+LABEL = "Bulkhead Pro" if IS_PRO else "Bulkhead"
