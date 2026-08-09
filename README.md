@@ -6,7 +6,7 @@ Select faces, press one button, get hierarchical panelling with continuous seam 
 machined height steps, chamfered plate edges, and bolted-on fittings and vents. Press
 F9 and reroll the seed until the layout is right.
 
-![Plated hull panel](docs/images/plating.png)
+![Bulkhead: plated hull panel under a raking light](docs/images/demo.gif)
 
 ---
 
@@ -94,6 +94,15 @@ images at the end because this product is judged by eye:
 blender --background --factory-startup --python tools/verify_in_blender.py
 blender --background --factory-startup --python tools/verify_dist.py
 python tools/build_addon.py
+```
+
+Demo frames render on a remote box, because headless EEVEE has no GL context and
+falls back to software rasterisation. Cycles needs no GL, so the render host does not
+need a GPU — just cores:
+
+```bash
+bash tools/render_on_vps.sh BULKHEAD_FRAMES=60 BULKHEAD_W=1280 BULKHEAD_H=720
+bash tools/make_video.sh
 ```
 
 ## Licence

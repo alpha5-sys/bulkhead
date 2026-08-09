@@ -37,17 +37,23 @@ ffmpeg -y -loglevel error -i "$OUT/bulkhead.mp4" \
   "$OUT/bulkhead-vertical.mp4"
 
 # GIF via a generated palette: without one, a dark scene bands badly.
+#
+# Dense greebling is high-entropy and compresses poorly as GIF: at 720px/18fps
+# this came out at 16 MB, past what Reddit and X will happily inline. Fewer
+# frames, a smaller frame and a reduced palette carry the motion just as well at
+# a fraction of the size. The mp4 stays the high-quality asset.
 ffmpeg -y -loglevel error -i "$OUT/bulkhead.mp4" \
-  -vf "fps=18,scale=720:-1:flags=lanczos,palettegen=stats_mode=diff" \
+  -vf "fps=12,scale=560:-1:flags=lanczos,palettegen=max_colors=128:stats_mode=diff" \
   "$OUT/palette.png"
 ffmpeg -y -loglevel error -i "$OUT/bulkhead.mp4" -i "$OUT/palette.png" \
-  -lavfi "fps=18,scale=720:-1:flags=lanczos[x];[x][1:v]paletteuse=dither=bayer:bayer_scale=3" \
+  -lavfi "fps=12,scale=560:-1:flags=lanczos[x];[x][1:v]paletteuse=dither=bayer:bayer_scale=4" \
   -loop 0 "$OUT/bulkhead.gif"
 rm -f "$OUT/palette.png"
 
-# Cover still: the last frame, where the cable is draped over the sphere.
-last=$(find "$FRAMES" -name 'f*.png' | sort | tail -1)
-cp "$last" "$OUT/cover.png"
+# Cover still: a quarter into the orbit, where the key light rakes hardest across
+# the plating and the depth reads best.
+cover=$(find "$FRAMES" -name 'f*.png' | sort | awk 'NR==15')
+cp "$cover" "$OUT/cover.png"
 
 echo
 ls -lh "$OUT"/bulkhead.mp4 "$OUT"/bulkhead.gif "$OUT"/bulkhead-vertical.mp4 \

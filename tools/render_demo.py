@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.join(ROOT, "addon"))
 FRAMES = int(os.environ.get("BULKHEAD_FRAMES", 60))
 W = int(os.environ.get("BULKHEAD_W", 960))
 H = int(os.environ.get("BULKHEAD_H", 540))
-SAMPLES = int(os.environ.get("BULKHEAD_SAMPLES", 16))
+SAMPLES = int(os.environ.get("BULKHEAD_SAMPLES", 64))
 OUT = os.environ.get("BULKHEAD_OUT", os.path.join(ROOT, "build", "demo", "frames"))
 os.makedirs(OUT, exist_ok=True)
 
@@ -76,17 +76,13 @@ bpy.ops.bulkhead.plate(seed=12, use_features=True, density=0.45, max_depth=5,
                        vent_chance=0.28)
 print(f"plated: {len(obj.data.polygons)} faces")
 
-scene.render.engine = "BLENDER_EEVEE_NEXT" if "BLENDER_EEVEE_NEXT" in {
-    i.identifier for i in
-    bpy.types.RenderSettings.bl_rna.properties["engine"].enum_items
-} else "BLENDER_EEVEE"
+sys.path.insert(0, HERE)
+import render_engine  # noqa: E402
+
 scene.render.resolution_x, scene.render.resolution_y = W, H
 scene.render.image_settings.file_format = "PNG"
-try:
-    scene.eevee.use_raytracing = False
-    scene.eevee.taa_render_samples = SAMPLES
-except AttributeError:
-    pass
+engine = render_engine.setup(scene, samples=SAMPLES)
+print(f"engine: {engine}")
 
 RADIUS, HEIGHT = 5.2, 3.0
 
