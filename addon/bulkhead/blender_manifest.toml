@@ -4,10 +4,10 @@ id = "bulkhead"
 version = "1.0.0"
 name = "Bulkhead"
 tagline = "Hull plating and greebles that look designed, not random"
-maintainer = "NSIT <niklesh.kumar@nsit.com.fj>"
+maintainer = "Niklesh Kumar <niklesh.kumar@nsit.com.fj>"
 type = "add-on"
 
-website = "https://github.com/nsit/bulkhead"
+website = "https://github.com/alpha5-sys/bulkhead"
 
 tags = ["Mesh", "Modeling", "Object"]
 

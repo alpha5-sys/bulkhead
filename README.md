@@ -44,13 +44,15 @@ Bulkhead plates four-sided faces. Non-quads are skipped and reported, not mangle
 The free edition is not a crippled demo — it has the part that carries the whole
 look.
 
-| | Free | [Bulkhead](https://gumroad.com) |
+| | Free | Bulkhead (paid) |
 |---|---|---|
 | Hierarchical plating, aligned seams | ✅ | ✅ |
 | Machined height steps, chamfers | ✅ | ✅ |
 | Seed rerolling from the redo panel | ✅ | ✅ |
 | Fittings — greebles bolted to plates | | ✅ |
 | Vents | | ✅ |
+
+The paid edition is not listed yet — it goes up on Gumroad at launch. Watch this repo.
 
 ## How it works
 
