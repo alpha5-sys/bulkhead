@@ -15,5 +15,6 @@ blender_version_min = "4.2.0"
 
 license = ["SPDX:GPL-3.0-or-later"]
 
-[permissions]
-# none: Bulkhead is fully offline and touches no files outside the .blend
+# No [permissions] section: Bulkhead needs none. It is fully offline and
+# writes nothing outside the .blend. An empty table is a validation error --
+# the platform expects key/value pairs, so 'none' means omit the section.
