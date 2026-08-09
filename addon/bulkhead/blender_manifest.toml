@@ -1,0 +1,19 @@
+schema_version = "1.0.0"
+
+id = "bulkhead"
+version = "1.0.0"
+name = "Bulkhead"
+tagline = "Hull plating and greebles that look designed, not random"
+maintainer = "NSIT <niklesh.kumar@nsit.com.fj>"
+type = "add-on"
+
+website = "https://github.com/nsit/bulkhead"
+
+tags = ["Mesh", "Modeling", "Object"]
+
+blender_version_min = "4.2.0"
+
+license = ["SPDX:GPL-3.0-or-later"]
+
+[permissions]
+# none: Bulkhead is fully offline and touches no files outside the .blend
