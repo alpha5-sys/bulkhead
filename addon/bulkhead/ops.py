@@ -64,6 +64,12 @@ class BULKHEAD_OT_plate(Operator):
         description="Share of plates that stay at the base level. Lowering this "
                     "turns the surface into a skyline, which rarely looks right")
 
+    quadrangulate: BoolProperty(
+        name="Convert Non-Quads", default=True,
+        description="Turn triangles and ngons into quads before plating. Off, they "
+                    "are skipped - which on a boolean-cut model can mean half the "
+                    "surface is left bare")
+
     # -- fittings ------------------------------------------------------------
     use_features: BoolProperty(
         name="Fittings", default=True,
@@ -102,6 +108,7 @@ class BULKHEAD_OT_plate(Operator):
         obj = context.active_object
         # Free edition ships plating only; the flag is what the build strips.
         settings = _Settings(self, edition.HAS_FEATURES and self.use_features)
+        settings.quadrangulate = self.quadrangulate
 
         panelled, skipped = mesh.plate_object(obj, settings, self.seed)
 
@@ -128,6 +135,7 @@ class BULKHEAD_OT_plate(Operator):
         col.prop(self, "split_jitter", slider=True)
         col.prop(self, "min_size", slider=True)
         col.prop(self, "max_aspect")
+        col.prop(self, "quadrangulate")
 
         col = box.column(align=True)
         col.prop(self, "gap")

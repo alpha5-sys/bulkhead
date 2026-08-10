@@ -134,6 +134,40 @@ check("a cube (all quads) plates fine",
       bpy.ops.bulkhead.plate(seed=2, use_features=True) == {"FINISHED"})
 
 
+# ------------------------------------------------- non-quad coverage (regression)
+print(r"=== boolean hard-surface coverage ===")
+def boolean_block():
+    reset(); bulkhead.unregister(); bulkhead.register()
+    bpy.ops.mesh.primitive_cube_add(size=2.0)
+    t = bpy.context.active_object
+    for i, loc in enumerate(((0.6, 0, 0), (-0.5, 0.4, 0), (0, -0.6, 0.3))):
+        bpy.ops.mesh.primitive_cylinder_add(radius=0.28, depth=4.0, location=loc,
+                                            rotation=(0, 1.5708, 0.3 * i))
+        c = bpy.context.active_object
+        m = t.modifiers.new(f"b{i}", "BOOLEAN")
+        m.operation, m.object = "DIFFERENCE", c
+        bpy.context.view_layer.objects.active = t
+        bpy.ops.object.modifier_apply(modifier=m.name)
+        bpy.data.objects.remove(c, do_unlink=True)
+    bpy.context.view_layer.objects.active = t
+    return t
+
+o = boolean_block()
+quads_in = sum(1 for p in o.data.polygons if len(p.vertices) == 4)
+total_in = len(o.data.polygons)
+bpy.ops.bulkhead.plate(seed=1, max_depth=3, use_features=False, quadrangulate=False)
+skipping = len(o.data.polygons)
+
+o = boolean_block()
+bpy.ops.bulkhead.plate(seed=1, max_depth=3, use_features=False, quadrangulate=True)
+converting = len(o.data.polygons)
+
+check("a real boolean model is mostly non-quad", quads_in < total_in * 0.6,
+      f"{quads_in}/{total_in} quads")
+check("converting non-quads plates far more of it", converting > skipping * 1.5,
+      f"{skipping} -> {converting} faces")
+
+
 # ------------------------------------------------------------- curved surface
 print("\n=== curved surface ===")
 reset(); bulkhead.unregister(); bulkhead.register()

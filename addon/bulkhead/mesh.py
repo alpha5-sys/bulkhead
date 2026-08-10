@@ -145,6 +145,36 @@ def plate_face(bm, face, settings, seed):
     return made
 
 
+def quadrangulate(bm, faces):
+    """Turn non-quad faces into quads, using Blender's own operators.
+
+    Measured on a boolean-cut cube - the shape real hard-surface actually arrives as
+    - 54 of 112 faces were triangles or ngons, so plating quads only left half the
+    model bare. That is useless on exactly the geometry this add-on targets.
+
+    Triangulating and rejoining is not lossless, but this tool already replaces the
+    surface with thousands of new faces; preserving the original ngon topology was
+    never on the table. Skipping the geometry was the worse trade.
+    """
+    odd = [f for f in faces if f.is_valid and len(f.verts) != 4]
+    if not odd:
+        return faces
+
+    quads = [f for f in faces if f.is_valid and len(f.verts) == 4]
+    tris = bmesh.ops.triangulate(bm, faces=odd)["faces"]
+    bmesh.ops.join_triangles(
+        bm, faces=tris,
+        angle_face_threshold=3.14159, angle_shape_threshold=3.14159,
+        cmp_seam=False, cmp_sharp=False, cmp_uvs=False, cmp_vcols=False)
+
+    bm.faces.ensure_lookup_table()
+    # join_triangles invalidates the faces it merges, so rebuild the target list
+    # from what survived rather than from the operator's return value.
+    fresh = [f for f in bm.faces if f.is_valid]
+    keep = {f.index for f in quads if f.is_valid}
+    return [f for f in fresh if f.index in keep or f not in quads]
+
+
 def plate_object(obj, settings, seed, selected_only=True):
     """Panel an object's faces in place. Returns (faces_panelled, faces_skipped)."""
     bm = bmesh.new()
@@ -157,8 +187,13 @@ def plate_object(obj, settings, seed, selected_only=True):
     if selected_only and not targets:
         targets = list(bm.faces)
 
+    if getattr(settings, "quadrangulate", True):
+        targets = quadrangulate(bm, targets)
+
     made, skipped = [], 0
-    for face in targets:
+    for face in list(targets):
+        if not face.is_valid:
+            continue
         if len(face.verts) != 4:
             skipped += 1
             continue
